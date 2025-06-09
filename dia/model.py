@@ -94,7 +94,6 @@ class Dia:
         compute_dtype: str | ComputeDtype = ComputeDtype.FLOAT32,
         device: torch.device | None = None,
         load_dac: bool = True,
-        cache_dir: str | None = None,
     ):
         """Initializes the Dia model.
 
@@ -113,7 +112,7 @@ class Dia:
         if isinstance(compute_dtype, str):
             compute_dtype = ComputeDtype(compute_dtype)
         self.compute_dtype = compute_dtype.to_dtype()
-        self.model: DiaModel = DiaModel(config, self.compute_dtype, cache_dir=cache_dir)
+        self.model: DiaModel = DiaModel(config, self.compute_dtype)
         self.dac_model = None
         self._compiled_step = None
         self.load_dac = load_dac
@@ -176,6 +175,7 @@ class Dia:
         compute_dtype: str | ComputeDtype = ComputeDtype.FLOAT32,
         device: torch.device | None = None,
         load_dac: bool = True,
+        cache_dir: str | None = None,
     ) -> "Dia":
         """Loads the Dia model from a Hugging Face Hub repository.
 
@@ -200,7 +200,9 @@ class Dia:
 
         # Load model directly using DiaModel's from_pretrained which handles HF download
         try:
-            loaded_model = DiaModel.from_pretrained(model_name, compute_dtype=compute_dtype.to_dtype())
+            loaded_model = DiaModel.from_pretrained(
+                model_name, compute_dtype=compute_dtype.to_dtype(), cache_dir=cache_dir
+            )
         except Exception as e:
             raise RuntimeError(f"Error loading model from Hugging Face Hub ({model_name})") from e
 
