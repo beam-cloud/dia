@@ -894,8 +894,9 @@ class DiaModel(
 ):
     """PyTorch Dia Model using DenseGeneral."""
 
-    def __init__(self, config: DiaConfig, compute_dtype: torch.dtype):
-        super().__init__()
+    def __init__(self, config: DiaConfig, compute_dtype: torch.dtype, cache_dir: str | None = None):
+        super().__init__(cache_dir=cache_dir)
+
         self.config = config
         self.encoder = Encoder(config, compute_dtype)
         self.decoder = Decoder(config, compute_dtype)
